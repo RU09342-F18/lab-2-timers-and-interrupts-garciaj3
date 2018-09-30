@@ -40,7 +40,7 @@ __interrupt void Timer_A1 (void)
 }
 ```
 The toggle rate of the green LED is calculated by taking the offset added value from TA0CCR0 (32768 Hz) and dividing it by (2*32768).
-The toggle rate of the green LED is equal 0.5Hz.The second ISR is processed through the Timer_A interrupt vector register or TAIV, and
+The toggle rate of the green LED is equal 0.5Hz. The second ISR is processed through the Timer_A interrupt vector register or TAIV, and
 is used to prioritize and combine the remaining interrupt flags. When reading the TAIV it will give the value of the current interrupt,
 as well as clearing that interrupts flag. The red LED is toggle at a rate of 0.25Hz. The value is calculated by taken 32768 and dividing
 it by (2*65536). The values 65536 Hz is the maximum counter for the timer.
