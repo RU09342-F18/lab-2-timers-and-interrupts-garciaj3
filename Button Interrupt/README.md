@@ -1,30 +1,11 @@
-# Button Interrupt
-Last lab you were introduced to the idea of "Polling" where in you would constantly check the status of the P1IN register to see if something has changed. While your code may have worked, it ends up spending a ton of time just checking something that has not changed. What we can do instead is use another two registers available to us from the GPIO peripheral, P1IE and P1IES, to allow our processor to just chill out and wait until something happens to act upon it. Without spending too much space on this README with explanations, what makes these interrupts tick is the following code:
+# Button Interrupt - MSP430G2553 & MSP432P401R
+The files provided in this folder are **interrupt1.c** and **interrupt2.c** that both uses interrupts to toggle an LED with buttons in the development boards. The MSP430G2553 c.file is named interrupt1.c and the MSP432P401R c.file is named interrupt2.c. 
 
-```c
-#pragma vector=PORT1_VECTOR
-__interrupt void Port_1(void)
-{
-}
-```
+### MSP430G2553
+**Description** : The MSP430G2553 uses an interrupt to toggle the P1.0 green LED ON only when depressing the button. The code utilizes a for loop and an interrupt to allow the LED to light up when depressing the button. The flag is set to check when the button is press and triggers the interrupt. The interrupt is triggered after the button is toggle from HitoLow, and changes the state of the LED ON. THe flag is then cleared after the letting go of the button and the main program is set at infinite loop.
 
-While you still need to initialize the Ports to be interrupt enabled and clear the flags, this "Pragma Vector" tells the compiler that when a particular interrupt occurs, run this code. 
+### MSP432P401R
+**Description** : The MSP432P401R uses interrupts to toggle the P1.0 red LED ON and OFF when the button is press. The code utilizes an interrupt to detect when the button is press for P1.1 and then toggles the LED P1.0. The P1.0 LED is configured as an output and P1.1 (switch) as input with pull-up resistor. The rest of the other pins are configured as output low. The flag is then set to check when the button is press and triggers the interrupt. A delay cycles of 500000 is used to compensate the switch debouncing effect. This delay waits for an  approximate 0.5 secs until it lets the LED turn ON. 
 
-## A word of caution...
-While you might be willing to just jump straight in and begin using example code you may find, I would seriously take a few minutes and find a few good videos or tutorials to help understand exactly what is happening in the processor. I implore you to do this since you will inevitably have issues in the future which are solved by not understanding how the processor processes interrupts. A prime example is when I once tried implementing UART and I did not realize that you had to clear a flag or else my code would get stuck in an infinite loop. Hours of my life are now gone thanks to me at the time not understanding how interrupts worked with the peripherals I was utilizing. A few resources I have used in the past include:
-* https://youtu.be/GR8S2XT47eI?t=1334
-* http://processors.wiki.ti.com/index.php/MSP430_LaunchPad_Interrupt_vs_Polling
-* http://www.simplyembedded.org/tutorials/msp430-interrupts/
-
-## Task
-Your goal for this part of the lab is to replicate your button code from Lab 2, where the LED should change states only when the button is pressed. This can be extended to include behaviors such as only have the LED on when the button is depressed, or have the LED blink one color when pressed and another when it is let go. Another behavior extends from the second lab which is speed control based on the button presses. For example, have the rate of the LED cycle between a "low", "Medium", and "High" rate of speed.
-
-## Extra Work 
-### Binary Counter/Shift Register
-Either use a function generator, another processor, or a button to control your microcontroller as an 8-bit binary counter using 8 LEDs to indicate the current status of the counter.
-
-### Multiple Buttons
-Come up with a behavior of your own that incorporates needing to use two buttons or more and these two buttons must be implemented using interrupts.
-
-### (Recommended) Energy Trace
-Using the built in EnergyTrace(R) software in CCS and the corresponding supporting hardware on the MSP430 development platforms, analyze the power consumption between the button based blink code you wrote last week versus this week. What can you do to decrease the amount of power used within the microcontroller in this code? Take a look at the MSP430FR5994 and the built in SuperCap and see how long your previous code and the new code lasts. For a quick intro to EnergyTrace(R), take a look at this video: https://youtu.be/HqeDthLrcsg
+### Watchdog Timers
+Both are set to have their watchdog timers off so that the controllers do not reset everytime when they're using interrupts. In fact, watchdog timers keeps track of any abnormal behavior from the program. If the program fails and it "crashes," then the watchdog timer will trigger a reset and force the program back to the beginning. This needs to be disable so that the function of the code works.
