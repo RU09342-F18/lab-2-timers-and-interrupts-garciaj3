@@ -7,8 +7,7 @@ The files provided in this folder are **timer1.c** and **timer2.c** that both us
   TA0CTL |= TASSEL_1 + MC_2 + TAIE; //Start Timer with ACLK clock source, Continuous mode and enable overflow interrupt
 
   __bis_SR_register(LPM0_bits + GIE); // Enable the global interrupt and enter LPM0
-  
-  ```
+```
 There are two ISR one for Timer_A0 and the other for Timer_A1. The Timer_A0 is first prioritized and toggles the green LED with an added offset to TACCR0 of 32768. TA_0 ISR is then triggered every 32768 cycles and the ISR TA_1 is triggered after overflow from the timer counter -> 65525 counts. 
 
 ```c
@@ -39,9 +38,12 @@ __interrupt void Timer_A1 (void)
         // toggle rate =  32768/(2*65536) = 0.25Hz
         break; // Overflow
 }
-
 ```
-The toggle rate of the green LED is calculated by taking the offset added value from TA0CCR0 (32768 Hz) and dividing it by (2*32768). The toggle rate of the green LED is equal 0.5Hz.The second ISR is processed through the Timer_A interrupt vector register or TAIV, and is used to prioritize and combine the remaining interrupt flags. When reading the TAIV it will give the value of the current interrupt, as well as clearing that interrupts flag. The red LED is toggle at a rate of 0.25Hz. The value is calculated by taken 32768 and dividing it by (2*65536). The values 65536 Hz is the maximum counter for the timer.
+The toggle rate of the green LED is calculated by taking the offset added value from TA0CCR0 (32768 Hz) and dividing it by (2*32768).
+The toggle rate of the green LED is equal 0.5Hz.The second ISR is processed through the Timer_A interrupt vector register or TAIV, and
+is used to prioritize and combine the remaining interrupt flags. When reading the TAIV it will give the value of the current interrupt,
+as well as clearing that interrupts flag. The red LED is toggle at a rate of 0.25Hz. The value is calculated by taken 32768 and dividing
+it by (2*65536). The values 65536 Hz is the maximum counter for the timer.
 
 ### MSP430F5529 TimerA
 **Description** : This code blinks two LEDs connected to P1.0 and P4.7 on the MSP430F5529 board. The TA0CCR0 is valued at 20000 to count up at this value before it drops to 0. The TimerA module is used in up mode with an ACLK source and pre-divider of 2. 
